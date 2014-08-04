@@ -73,7 +73,15 @@
                                           "%b"))))
 
 ;; use zenburn as the default theme
-(load-theme 'zenburn t)
+;;(load-theme 'zenburn t)
+;; DS - Installed color-theme which may have interferred with
+;; the standard theme - so when switching themes we get
+;; the wrong backgrounds - so for now selecting my theme
+;; directly here.
+;; currently when I remove color-theme from packages there
+;; is a reference within the startup which isn't being removed.
+(load-theme 'twilight t)
+
 
 (provide 'prelude-ui)
 ;;; prelude-ui.el ends here
