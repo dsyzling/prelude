@@ -34,6 +34,11 @@
 ;; for now let's use the default theme with a different background colour
 (set-background-color "#211e1e")
 
+;; and make comment italic for the twilight theme
+(custom-theme-set-faces
+ 'twilight
+ '(font-lock-comment-face ((t (:italic t :foreground "#5F5A60")))))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; org-mode config
 
