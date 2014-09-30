@@ -16,7 +16,8 @@
 (when (eq system-type 'darwin)
   ;; enable cmd key to be used as emacs meta key
   (setq mac-command-modifier 'meta)
-  (set-face-font 'default "-unknown-Consolas-bold-normal-normal-*-16-*-*-*-m-0-iso10646-1")
+  ;;(set-face-font 'default "-unknown-Consolas-bold-normal-normal-*-16-*-*-*-m-0-iso10646-1")
+  (set-face-font 'default "-unknown-Inconsolata-bold-normal-normal-*-17-*-*-*-m-0-iso10646-1")
   )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -45,11 +46,19 @@
 (setq org-agenda-files (list "~/Dropbox/home/org/personal.org"
                              "~/Dropbox/home/org/goals.org"
                              "~/Dropbox/home/org/journal.org"))
+
+;; set org mode wrap at 80 cols
+(add-hook 'org-mode-hook 'turn-on-auto-fill)
+(add-hook 'org-mode-hook
+          '(lambda() (set-fill-column 80)))
+
 (setq org-log-done 'time)
 (custom-set-variables
+ ;; hide stars and indent note items automatically
+ '(org-startup-indented t)
  '(org-agenda-ndays 7)
  '(org-deadline-warning-days 14)
-                                        ;'(org-agenda-show-all-dates t)
+ ;;'(org-agenda-show-all-dates t)
  '(org-agenda-skip-deadline-if-done t)
  '(org-agenda-skip-scheduled-if-done t)
  '(org-blank-before-new-entry nil)
