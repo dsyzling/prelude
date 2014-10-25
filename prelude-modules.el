@@ -13,7 +13,7 @@
 (require 'prelude-c)
 
 ;; pin cider to latest stable melpa version - since latest release 16/9/2014 is broken
-(add-to-list 'package-pinned-packages '(cider . "melpa-stable") t)
+;;(add-to-list 'package-pinned-packages '(cider . "melpa-stable") t)
 (require 'prelude-clojure)
 ;; (require 'prelude-coffee)
 ;; (require 'prelude-common-lisp)

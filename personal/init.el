@@ -1,6 +1,10 @@
 ;;; init.el --- My customisations for prelude
 ;;; Commentary:
 
+;; add melpa stable to our package archives
+(add-to-list 'package-archives
+             '("melpa-stable" . "http://melpa-stable.milkbox.net/packages/") t)
+
 ;; disable prelude guru mode
 (setq prelude-guru nil)
 
@@ -34,6 +38,9 @@
 
 ;; for now let's use the default theme with a different background colour
 (set-background-color "#211e1e")
+
+(disable-theme 'zenburn)
+(load-theme 'twilight t)
 
 ;; and make comment italic for the twilight theme
 (custom-theme-set-faces
@@ -118,3 +125,46 @@
 ;; our custom twlight colour theme
 ;;(require 'color-theme-twilight-ds)
 ;;(color-theme-twilight-ds)
+
+
+;; Cider/Clojure customisation
+
+
+(add-hook 'cider-repl-mode-hook 'paredit-mode)
+(add-hook 'cider-mode-hook 'paredit-mode)
+
+;; these should be enabled by prelude by default - but might be useful
+;; for other scheme and lisp modes.
+;;(add-hook 'cider-repl-mode-hook 'subword-mode)
+;;(add-hook 'cider-repl-mode-hook 'company-mode)
+;;(add-hook 'cider-mode-hook 'company-mode)
+
+(defun cider-repl-command (cmd)
+  "Execute commands on the cider repl"
+  (cider-switch-to-repl-buffer)
+  (goto-char (point-max))
+  (insert cmd)
+  (cider-repl-return)
+  (cider-switch-to-last-clojure-buffer))
+
+(defun cider-repl-reset ()
+  "Assumes reloaded + tools.namespace is used to reload everything"
+  (interactive)
+  (save-some-buffers)
+  (cider-repl-command "(user/reset)"))
+
+(defun cider-reset-test-run-tests ()
+  (interactive)
+  (cider-repl-reset)
+  (cider-test-run-tests))
+
+;; (define-key cider-mode-map (kbd "C-c r") 'cider-repl-reset)
+;; (define-key cider-mode-map (kbd "C-c .") 'cider-reset-test-run-tests)
+
+
+;; Racket/Geiser customisation
+
+;; allow C-c C-c to eval current definition - same as M-C-x
+(add-hook 'geiser-mode-hook
+          '(lambda ()
+             (define-key geiser-mode-map (kbd "C-c C-c") 'geiser-eval-definition)))
