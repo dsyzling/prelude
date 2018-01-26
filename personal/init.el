@@ -1,5 +1,11 @@
 ;;; init.el --- My customisations for prelude
 ;;; Commentary:
+;;; To merge upstream changes to prelude
+;;;   git fetch upstream
+;;;   git checkout master
+;;;   git merge upstream/master
+
+(setq ns-use-srgb-colorspace t)
 
 ;; add melpa stable to our package archives
 (add-to-list 'package-archives
@@ -7,6 +13,12 @@
 
 ;; disable prelude guru mode
 (setq prelude-guru nil)
+
+;; disable whitespace higlighting - long lines etc. prelude turns this on in text mode by default
+(setq prelude-whitespace nil)
+
+;; enable desktop save mode
+(desktop-save-mode 1)
 
 (when (eq system-type 'windows-nt)
     (set-face-font 'default "-outline-Consolas-bold-r-normal-normal-15-112-96-96-c-*-iso8859-1")
@@ -21,7 +33,13 @@
   ;; enable cmd key to be used as emacs meta key
   (setq mac-command-modifier 'meta)
   ;;(set-face-font 'default "-unknown-Consolas-bold-normal-normal-*-16-*-*-*-m-0-iso10646-1")
-  (set-face-font 'default "-unknown-Inconsolata-bold-normal-normal-*-17-*-*-*-m-0-iso10646-1")
+  ;;(set-face-font 'default "-unknown-Inconsolata-bold-normal-normal-*-17-*-*-*-m-0-iso10646-1")
+  ;; improved font rendering in emacs 24.4 now makes this font style more pleasing on mac
+  ;;(set-face-font 'default "-unknown-Inconsolata-normal-normal-normal-*-16-*-*-*-m-0-iso10646-1")
+  ;; As of Emacs 25 on mac this appears to be the only way of selecting consolas
+  ;;  (set-face-attribute 'default nil :family "Consolas")
+  ;;  (set-face-attribute 'default nil :height 165)
+  (set-frame-font "Menlo 15")
   )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -42,9 +60,11 @@
 (disable-theme 'zenburn)
 (load-theme 'twilight t)
 
-;; and make comment italic for the twilight theme
+;; make comment italic and standard foreground text less 'bright'
+;; for the twilight theme
 (custom-theme-set-faces
  'twilight
+ '(default ((t (:background "#141414" :foreground "#cacaca"))))
  '(font-lock-comment-face ((t (:italic t :foreground "#5F5A60")))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -54,10 +74,23 @@
                              "~/Dropbox/home/org/goals.org"
                              "~/Dropbox/home/org/journal.org"))
 
+
+(setq org-agenda-custom-commands
+      '(("p" "Projects" tags "PROJECT" nil)
+        ("r" "Studying Tasks/Research"
+         ((tags-todo "study")
+          ))
+        ("c" "Completed Tasks" todo "DONE" nil)
+        ("v" "21 day view" agenda "" ((org-agenda-ndays 21)))
+        ("u" "Unscheduled tasks" todo "TODO"
+         ((org-agenda-skip-function '(org-agenda-skip-entry-if 'scheduled 'deadline))))))
+
 ;; set org mode wrap at 80 cols
 (add-hook 'org-mode-hook 'turn-on-auto-fill)
 (add-hook 'org-mode-hook
-          '(lambda() (set-fill-column 80)))
+          '(lambda() (set-fill-column 80))
+          ;;(set-face-foreground 'org-scheduled-today "#cacaca")
+          )
 
 (setq org-log-done 'time)
 (custom-set-variables
@@ -82,32 +115,33 @@
 (define-key global-map "\C-cr" 'org-remember)
 
 ;; refile targets
+(setq org-directory "~/Dropbox/home/org")
 (setq org-refile-targets (quote (("personal.org" :level . 1))))
 
-(defun wicked/remember-review-file ()
-  "Open `remember-data-file'."
-  (interactive)
-  (find-file "~/Dropbox/home/org/newgtd.org"))
-(global-set-key (kbd "C-c R") 'wicked/remember-review-file)
+;; mobile org
+(setq org-mobile-directory "~/Dropbox/MobileOrg")
+(setq org-mobile-files (cons  "labnotebook.org" org-agenda-files))
+(setq org-mobile-inbox-for-pull "~/Dropbox/home/org/from-mobile.org")
 
+(defun labnotebook-file () (concat org-directory "/labnotebook.org"))
+(defun visit-journal-file ()
+  "Open lab notebook and journal file"
+  (interactive)
+  (find-file (labnotebook-file)))
+(global-set-key (kbd "C-c J") 'visit-journal-file)
 (global-set-key (kbd "C-c j") 'org-capture)
+
 (setq org-capture-templates
       '(
-        ("t" "Todo" entry
-         (file+headline "~/Dropbox/home/org/journal.org" "Journal")
-         "\n\n** TODO %?\nSCHEDULED: %t\n%i%a\n\n\n"
-         :empty-lines 1)
-
-        ("n" "Note" entry
-         (file+headline "~/Dropbox/home/org/journal.org" "Journal")
-         "\n\n** %?\n%U\n%i%a\n\n\n"
-         :empty-lines 1)
-
         ("j" "Journal" entry (file+datetree
-                              "~/Dropbox/home/org/journal.org")
+                              "~/Dropbox/home/org/labnotebook.org")
          "** %^{Heading}\n%?")
-        )
-      )
+        ("l" "Link" plain (file "~/Dropbox/home/org/labnotebook.org")
+         "- %?\n %x\n")
+
+        ("n" "Note-someday" entry (file+headline "~/Dropbox/home/org/labnotebook.org" "Someday")
+         "\n\n** %?\n")
+        ))
 
 ;; our org-remember templates
 ;; we can set our default org notes file - but we'll specify a template for todo items
@@ -118,6 +152,12 @@
         ("Journal" ?j "\n* %^{topic} %T \n%i%?\n" "~/Dropbox/home/org/journal.org")
 	("Someday" ?s "* %?\n  %i\n  %a" "~/Dropbox/home/org/newgtd.org" "Someday")))
 
+;; use helm to access headlines in org file
+(add-hook 'org-mode-hook
+          (lambda () (local-set-key (kbd "s-h") 'helm-org-headlines)))
+
+;; allow us to include source code into org mode docs and fontify
+(setq  org-src-fontify-natively t)
 
 ;; erc customisations - remove join, leave quit messages
 (setq erc-hide-list '("JOIN" "PART" "QUIT"))
@@ -158,6 +198,16 @@
   (cider-repl-reset)
   (cider-test-run-tests))
 
+;; some repl tweaks
+(setq cider-repl-use-clojure-font-lock t)
+(add-hook 'cider-repl-mode-hook 'paredit-mode)
+(add-hook 'cider-repl-mode-hook 'rainbow-delimiters-mode)
+
+;; clojure cheat sheet bind to meta-f1
+(require 'clojure-cheatsheet)
+(add-hook 'clojure-mode-hook
+          (lambda () (local-set-key [M-f1] 'clojure-cheatsheet)))
+
 ;; (define-key cider-mode-map (kbd "C-c r") 'cider-repl-reset)
 ;; (define-key cider-mode-map (kbd "C-c .") 'cider-reset-test-run-tests)
 
@@ -168,3 +218,14 @@
 (add-hook 'geiser-mode-hook
           '(lambda ()
              (define-key geiser-mode-map (kbd "C-c C-c") 'geiser-eval-definition)))
+
+;; PHP mode - temporary for zu-uk site
+(autoload 'php-mode "php-mode" "Major mode for editing php code." t)
+(add-to-list 'auto-mode-alist '("\\.php$" . php-mode))
+(add-to-list 'auto-mode-alist '("\\.inc$" . php-mode))
+
+
+;; GPG 2.2.x - now uses pinentry with a different interface - this change allows
+;; mini buffer entry of the passphrase
+;;  https://colinxy.github.io/software-installation/2016/09/24/emacs25-easypg-issue.html
+(setq epa-pinentry-mode 'loopback)
