@@ -1,17 +1,16 @@
-;;; prelude-yaml.el --- Emacs Prelude: YAML programming support.
+;;; prelude-elixir.el --- Emacs Prelude: Elixir programming support.
 ;;
-;; Copyright © 2011-2017 Bozhidar Batsov
+;; Copyright © 2014-2017 Samuel Tonini
 ;;
-;; Author: ToBeReplaced
-;; URL: http://batsov.com/prelude
+;; Author: Samuel Tonini <tonini.samuel@gmail.com>
 ;; Version: 1.0.0
-;; Keywords: convenience yaml
+;; Keywords: convenience elixir
 
 ;; This file is not part of GNU Emacs.
 
 ;;; Commentary:
 
-;; Prelude configuration for YAML.
+;; Some basic configuration for Elixir development.
 
 ;;; License:
 
@@ -31,14 +30,11 @@
 ;; Boston, MA 02110-1301, USA.
 
 ;;; Code:
-(prelude-require-packages '(yaml-mode))
 
-;; yaml-mode doesn't derive from prog-mode, but we can at least enable
-;; whitespace-mode and apply cleanup.
-(add-hook 'yaml-mode-hook 'whitespace-mode)
-(add-hook 'yaml-mode-hook 'subword-mode)
-(add-hook 'yaml-mode-hook
-          (lambda () (add-hook 'before-save-hook 'prelude-cleanup-maybe nil t)))
+(require 'prelude-programming)
 
-(provide 'prelude-yaml)
-;;; prelude-yaml.el ends here
+(prelude-require-packages '(elixir-mode alchemist))
+
+(provide 'prelude-elixir)
+
+;;; prelude-elixir.el ends here
