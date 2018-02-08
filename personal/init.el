@@ -212,6 +212,18 @@
 ;; (define-key cider-mode-map (kbd "C-c .") 'cider-reset-test-run-tests)
 
 
+;; Scala/ensime
+;; http://ensime.github.io/editors/emacs/install/
+(use-package ensime
+  :ensure t
+  :pin melpa)
+
+(use-package sbt-mode
+  :pin melpa)
+
+(use-package scala-mode
+  :pin melpa)
+
 ;; Racket/Geiser customisation
 
 ;; allow C-c C-c to eval current definition - same as M-C-x
@@ -229,3 +241,8 @@
 ;; mini buffer entry of the passphrase
 ;;  https://colinxy.github.io/software-installation/2016/09/24/emacs25-easypg-issue.html
 (setq epa-pinentry-mode 'loopback)
+
+;; Gnus and news initialisation directory on Dropbox so we can
+;; share amongst machines
+(setq gnus-init-file "~/Dropbox/home/gnus/.gnus.el")
+(setq gnus-startup-file "~/Dropbox/home/gnus/.newsrc")

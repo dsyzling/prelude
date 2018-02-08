@@ -39,6 +39,8 @@
 ;; You may delete these explanatory comments.
 (package-initialize)
 
+(require 'use-package)
+
 (defvar current-user
   (getenv
    (if (equal system-type 'windows-nt) "USERNAME" "USER")))
