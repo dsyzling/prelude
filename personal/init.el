@@ -70,13 +70,15 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; org-mode config
 
-(setq org-agenda-files (list "~/Dropbox/home/org/personal.org"
-                             "~/Dropbox/home/org/goals.org"
-                             "~/Dropbox/home/org/journal.org"))
+(setq org-agenda-files (list "~/Dropbox/home/org/todo/todo.org"
+                             "~/Dropbox/home/org/todo/garch.org"
+                             ))
 
 
 (setq org-agenda-custom-commands
       '(("p" "Projects" tags "PROJECT" nil)
+        ("d" "Day's Agenda" agenda "" ((org-agenda-ndays 1)))
+        ("w" "Waiting Tasks"  ((tags-todo "WAITING")))
         ("r" "Studying Tasks/Research"
          ((tags-todo "study")
           ))
@@ -95,6 +97,7 @@
 (setq org-log-done 'time)
 (custom-set-variables
  ;; hide stars and indent note items automatically
+ '(org-archive-location "~/Dropbox/home/org/archive/%s_archive::")
  '(org-startup-indented t)
  '(org-agenda-ndays 7)
  '(org-deadline-warning-days 14)
@@ -136,6 +139,9 @@
         ("j" "Journal" entry (file+datetree
                               "~/Dropbox/home/org/labnotebook.org")
          "** %^{Heading}\n%?")
+        
+        ("t" "ToDo" entry (file+headline "~/Dropbox/home/org/todo/inbox.org" "Inbox") "** %?\n" :prepend t)
+        
         ("l" "Link" plain (file "~/Dropbox/home/org/labnotebook.org")
          "- %?\n %x\n")
 
