@@ -30,22 +30,20 @@
 ;; along with GNU Emacs; see the file COPYING.  If not, write to the
 ;; Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
 ;; Boston, MA 02110-1301, USA.
-
+`
 ;;; Code:
 
 ;; Added by Package.el.  This must come before configurations of
 ;; installed packages.  Don't delete this line.  If you don't want it,
 ;; just comment it out by adding a semicolon to the start of the line.
 ;; You may delete these explanatory comments.
-(package-initialize)
-
-(require 'use-package)
+;(package-initialize)
 
 (defvar current-user
   (getenv
    (if (equal system-type 'windows-nt) "USERNAME" "USER")))
 
-(message "Prelude is powering up... Be patient, Master %s!" current-user)
+;(message "Prelude is powering up... Be patient, Master %s!" current-user)
 
 (when (version< emacs-version "25.1")
   (error "Prelude requires GNU Emacs 25.1 or newer, but you're running %s" emacs-version))
@@ -139,7 +137,7 @@ by Prelude.")
   (message "Loading personal configuration files in %s..." prelude-personal-dir)
   (mapc 'load (directory-files prelude-personal-dir 't "^[^#\.].*el$")))
 
-(message "Prelude is ready to do thy bidding, Master %s!" current-user)
+;(message "Prelude is ready to do thy bidding, Master %s!" current-user)
 
 ;; Patch security vulnerability in Emacs versions older than 25.3
 (when (version< emacs-version "25.3")

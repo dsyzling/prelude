@@ -18,7 +18,8 @@
 ;; Credits due to the excellent TextMate Twilight theme
 ;;
 
-(require 'color-theme)
+;(require 'color-theme)
+(prelude-require-packages '(color-theme))
 
 (defun color-theme-twilight-ds ()
   "Color theme by Marcus Crafter, based off the TextMate Twilight theme, created 2008-04-18"
@@ -179,7 +180,7 @@
      (gnus-summary-normal-ticked-face ((t (:foreground "firebrick"))))
      (gnus-summary-normal-unread-face ((t (nil))))
      (gnus-summary-selected-face ((t (:underline t))))
-     
+
      (italic ((t (nil))))
      (left-margin ((t (nil))))
      (text-cursor ((t (:background "yellow" :foreground "black"))))

@@ -18,7 +18,7 @@
 (setq prelude-whitespace nil)
 
 ;; enable desktop save mode
-(desktop-save-mode 1)
+;(desktop-save-mode 1)
 
 (when (eq system-type 'windows-nt)
     (set-face-font 'default "-outline-Consolas-bold-r-normal-normal-15-112-96-96-c-*-iso8859-1")
@@ -49,6 +49,7 @@
 (define-key global-map (kbd "RET") 'newline-and-indent)
 
 ;; enable window numbering mode
+(prelude-require-packages '(window-numbering))
 (window-numbering-mode)
 
 ;; don't show scroll bars
@@ -57,6 +58,7 @@
 ;; for now let's use the default theme with a different background colour
 (set-background-color "#211e1e")
 
+(prelude-require-packages '(twilight-theme))
 (disable-theme 'zenburn)
 (load-theme 'twilight t)
 
@@ -210,13 +212,15 @@
 (add-hook 'cider-repl-mode-hook 'rainbow-delimiters-mode)
 
 ;; clojure cheat sheet bind to meta-f1
-(require 'clojure-cheatsheet)
+(prelude-require-packages '(clojure-cheatsheet))
 (add-hook 'clojure-mode-hook
           (lambda () (local-set-key [M-f1] 'clojure-cheatsheet)))
 
 ;; (define-key cider-mode-map (kbd "C-c r") 'cider-repl-reset)
 ;; (define-key cider-mode-map (kbd "C-c .") 'cider-reset-test-run-tests)
 
+
+(prelude-require-packages '(use-package))
 
 ;; Scala/ensime
 ;; http://ensime.github.io/editors/emacs/install/
